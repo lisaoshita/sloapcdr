@@ -24,8 +24,8 @@
 #'                       Uncertainty, and Qualifier columns.
 #'                 \item \strong{Level 2} concatenates all monitor ID columns (State.Code,
 #'                       County.Code, Site.ID, Parameter, POC, Sample.Duration, Unit,
-#'                       Method). Returns only Date.Time, concatenated monitor IDs
-#'                       and Sample.Value columns.
+#'                       Method), separated by a "-". Returns only Date.Time, concatenated
+#'                       monitor IDs and Sample.Value columns.
 #'                 \item \strong{Level 3} applies names to each monitor ID. Example:
 #'                       monitor ID "06-079-0005-44201-1-1-8-87" becomes
 #'                       "CA-San_Luis_Obispo-0005-ozone-1-1_hour-ppb-model_400_ozone_analyzer".
@@ -37,12 +37,12 @@
 #'                       Date.Time and named monitor IDs as the columns, and Sample.Value
 #'                       as the values in each row.
 #'    }
-#' @param time.zone A character string indicating the time zone to be applied when
+#' @param time.zone A character string specifying the time zone to be used when
 #'              date values are converted to POSIXct class in level 1. Default
 #'              is set to UTC. See as.POSIXct documentation for more time zone options.
 #' @param remove A logical value indicating if columns which contain only a
 #'              single value should be dropped. Default is set to FALSE. If TRUE, this
-#'              option will be applied to all levels.
+#'              option will be applied at all levels.
 #'
 #'
 #' @return Returns a data frame.
@@ -73,7 +73,7 @@ read.aqs <- function(filename,
 
   state.code <- data$State.Code # used in level 3
 
-  if (remove == TRUE) { # remove columns that contain all same value if remove = TRUE
+  if (remove == TRUE) { # if remove = TRUE, drop the columns that contain all the same value
 
     rcol <- rep(0, ncol(data))
 
@@ -87,7 +87,7 @@ read.aqs <- function(filename,
 
     }
 
-    data <- data[ , -which((rcol == 1) & (colnames(data) != "Date"))]
+    data <- data[ , -which((rcol == 1) & (colnames(data) != "Date"))] # keep Date column
 
   }
 
