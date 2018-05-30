@@ -208,3 +208,8 @@ read.aqs <- function(filename,
 
 }
 
+
+# IN PROGRESS:
+# - DESCRIPTION (package meta data)
+# - Vignettes (long-form documentation)
+# - Automated testing
