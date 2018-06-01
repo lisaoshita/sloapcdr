@@ -13,6 +13,7 @@
 #' @param filename A character string of the name of the raw data file. If the
 #'              file is not in the working directory, the file path must be
 #'              specified in this argument (see example below).
+#'
 #' @param level An integer between 0 and 4, specifying the level of simplification
 #'              and formatting to be applied. Default is level 2.
 #'              \itemize{
@@ -40,6 +41,7 @@
 #' @param time.zone A character string specifying the time zone to be used when
 #'              date values are converted to POSIXct class in level 1. Default
 #'              is set to UTC. See as.POSIXct documentation for more time zone options.
+#'
 #' @param remove A logical value indicating if columns which contain only a
 #'              single value should be dropped. Default is set to FALSE. If TRUE, this
 #'              option will be applied at all levels.
