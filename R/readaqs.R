@@ -10,9 +10,9 @@
 #' different levels of formatting.
 #'
 #'
-#' @param filename A character string of the name of the raw data file. If the
-#'              file is not in the working directory, the file path must be
-#'              specified in this argument (see example below).
+#' @param file A character string of the name of the raw data file. If the
+#'             file is not in the working directory, the file path must be
+#'             specified in this argument (see example below).
 #'
 #' @param level An integer between 0 and 4, specifying the level of simplification
 #'              and formatting to be applied. Default is level 2.
@@ -51,7 +51,7 @@
 #'
 #'
 #' @examples
-#' aqs <- read.aqs(filename = "Desktop/AMP501_1595753-0.txt",
+#' aqs <- read.aqs(file = "Desktop/AMP501_1595753-0.txt",
 #'                 level = 4,
 #'                 remove = TRUE)
 #'
@@ -59,14 +59,14 @@
 #' @export
 
 
-read.aqs <- function(filename,
+read.aqs <- function(file,
                      level = 2,
                      time.zone = "UTC",
                      remove = FALSE) {
 
   # LEVEL 0 ----------------------------------------
 
-  data <- read.table(file = filename, # read in data
+  data <- read.table(file = file, # read in data
                      sep = "|",
                      header = TRUE,
                      colClasses = c(rep("character", 12),
@@ -89,7 +89,9 @@ read.aqs <- function(filename,
 
     }
 
-    data <- data[ , -which((rcol == 1) & (colnames(data) != "Date"))] # keep Date column
+    data <- data[ , -which((rcol == 1) & # keep Date column and keep Sample.Value
+                             (colnames(data) != "Date") &
+                             (colnames(data) != "Sample.Value"))]
 
   }
 
@@ -151,26 +153,26 @@ read.aqs <- function(filename,
 
   # LEVEL 3 ----------------------------------------
 
-  to.use <- colnames(data)[!(colnames(data) %in% c("Site.ID",
+  to.use <- colnames(data)[!(colnames(data) %in% c("Site.ID", # names of the files to upload
                                                     "POC",
                                                     "Sample.Value",
                                                     "Date.Time",
                                                     "Monitor.ID"))]
 
-  for (i in to.use) { # load only the label files needed
+  for (i in to.use) { # load only the files needed
 
     if (i == "County.Code") {
 
-      label.file <- County
+      labelfile <- get("County")
       data$County.Code <- paste(state.code, data$County.Code, sep = "/")
-      matches <- match(data$County.Code, label.file$Code)
-      data$County.Code <- label.file$Region[matches]
+      matches <- match(data$County.Code, labelfile$Code)
+      data$County.Code <- labelfile$Region[matches]
 
     } else {
 
-      label.file <- as.name(i)
+      labelfile <- get(i)
       var.name <- paste(i, ".Name", sep = "")
-      data[[i]] <- label.file[match(data[[i]], label.file[[i]]), 2]
+      data[[i]] <- labelfile[match(data[[i]], labelfile[[i]]), 2]
 
     }
   }
