@@ -104,7 +104,9 @@ test_that("read.aqs at level 4 returns data frames correctly", {
 
 })
 
-
+# TO DO:
 # for level 0 - if remove = T, test if all remaining columns have different values
+# test if monitor labels were concatenated in the right order??
+# if correct labels were applied?
 
 
