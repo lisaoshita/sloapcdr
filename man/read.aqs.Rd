@@ -4,10 +4,10 @@
 \alias{read.aqs}
 \title{Read in and format raw data transactions from Air Quality Systems}
 \usage{
-read.aqs(filename, level = 2, time.zone = "UTC", remove = FALSE)
+read.aqs(file, level = 2, time.zone = "UTC", remove = FALSE)
 }
 \arguments{
-\item{filename}{A character string of the name of the raw data file. If the
+\item{file}{A character string of the name of the raw data file. If the
 file is not in the working directory, the file path must be
 specified in this argument (see example below).}
 
@@ -22,8 +22,8 @@ specified in this argument (see example below).}
                    Uncertainty, and Qualifier columns.
              \item \strong{Level 2} concatenates all monitor ID columns (State.Code,
                    County.Code, Site.ID, Parameter, POC, Sample.Duration, Unit,
-                   Method). Returns only Date.Time, concatenated monitor IDs
-                   and Sample.Value columns.
+                   Method), separated by a "-". Returns only Date.Time, concatenated
+                   monitor IDs and Sample.Value columns.
              \item \strong{Level 3} applies names to each monitor ID. Example:
                    monitor ID "06-079-0005-44201-1-1-8-87" becomes
                    "CA-San_Luis_Obispo-0005-ozone-1-1_hour-ppb-model_400_ozone_analyzer".
@@ -36,13 +36,13 @@ specified in this argument (see example below).}
                    as the values in each row.
 }}
 
-\item{time.zone}{A character string indicating the time zone to be applied when
+\item{time.zone}{A character string specifying the time zone to be used when
 date values are converted to POSIXct class in level 1. Default
 is set to UTC. See as.POSIXct documentation for more time zone options.}
 
 \item{remove}{A logical value indicating if columns which contain only a
 single value should be dropped. Default is set to FALSE. If TRUE, this
-option will be applied to all levels.}
+option will be applied at all levels.}
 }
 \value{
 Returns a data frame.
@@ -52,7 +52,7 @@ Reads in a .txt file of raw data transactions with the option for specifying
 different levels of formatting.
 }
 \examples{
-aqs <- read.aqs(filename = "Desktop/AMP501_1595753-0.txt",
+aqs <- read.aqs(file = "Desktop/AMP501_1595753-0.txt",
                 level = 4,
                 remove = TRUE)
 
