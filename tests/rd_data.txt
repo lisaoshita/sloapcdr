@@ -1,0 +1,7 @@
+RD|Action Code|State Code|County Code|Site ID|Parameter|POC|Sample Duration|Unit|Method|Date|Start Time|Sample Value|Null Data Code|Sampling Frequency|Monitor Protocol (MP) ID|Qualifier - 1|Qualifier - 2|Qualifier - 3|Qualifier - 4|Qualifier - 5|Qualifier - 6|Qualifier - 7|Qualifier - 8|Qualifier - 9|Qualifier - 10|Alternate Method Detectable Limit|Uncertainty
+RD|I|06|079|0005|81102|2|1|001|122|20130601|00:00|27.4||||||||||||||4|
+RD|I|06|079|4002|81102|2|1|001|122|20120311|11:00|8|||||||||||||||
+RD|I|06|079|8001|85101|3|1|105|122|20140730|00:00|13|||||||||||||||
+RD|I|06|079|9001|85101|1|1|105|122|20161215|07:00|4|||||||||||||||
+RD|I|06|079|2004|85101|3|1|105|122|20120128|00:00||AL||||||||||||||
+RD|I|06|079|0005|81102|2|1|001|122|20130815|13:00||AX|||||||||||||4|
