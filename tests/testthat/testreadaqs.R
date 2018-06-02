@@ -11,7 +11,7 @@
 # library(sloapcdr) outputs same timezone warning message
 
 
-context("read.aqs and returned data frames")
+context("Testing form of data frames returned")
 library(sloapcdr)
 
 
@@ -85,12 +85,26 @@ test_that("read.aqs at level 3 returns data frames correctly", {
 # Tests for level 4
 # ------------------
 
+test_that("read.aqs at level 4 returns data frames correctly", {
+
+  datfile <- system.file("tests", "rd_data.txt", package = "sloapcdr")
+
+  # with remove = FALSE
+  expect_equal(ncol(read.aqs(file = datfile, level = 4)), 6) # test dimensions
+  expect_equal(nrow(read.aqs(file = datfile, level = 4)), 6)
+
+  # test if first column is Date.Time
+  df <- sloapcdr::read.aqs(datfile, level = 4)
+  date <- colnames(df)[1]
+  expect_equal(date, "Date.Time")
+
+  # with remove = TRUE
+  expect_equal(ncol(read.aqs(file = datfile, level = 4, remove = TRUE)), 6)
+  expect_equal(nrow(read.aqs(file = datfile, level = 4, remove = TRUE)), 6)
+
+})
 
 
+# for level 0 - if remove = T, test if all remaining columns have different values
 
-
-
-
-
-# test1 <- read.aqs(file = "tests/rd_data.txt", level = 3, remove = F)
 
