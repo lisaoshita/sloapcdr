@@ -4,7 +4,8 @@
 \alias{read.aqs}
 \title{Read in and format raw data transactions from Air Quality Systems}
 \usage{
-read.aqs(file, level = 2, time.zone = "UTC", remove = FALSE)
+read.aqs(file, level = 2, time.zone = "UTC", remove = FALSE,
+  RC = "ignore", ...)
 }
 \arguments{
 \item{file}{A character string of the name of the raw data file. If the
@@ -43,9 +44,17 @@ is set to UTC. See as.POSIXct documentation for more time zone options.}
 \item{remove}{A logical value indicating if columns which contain only a
 single value should be dropped. Default is set to FALSE. If TRUE, this
 option will be applied at all levels.}
+
+\item{RC}{A character string indicating if rows corresponding to RC should be dropped or
+returned. Can take either "ignore" (the default) or "include". If set to
+ignore, all rows corresponding to RC will be dropped. If set to "include",
+a list will be returned for each level containing a data frame for RD transactions
+in the first index, and a data frame of RC transactions in the second index.}
+
+\item{...}{Other parameters that will be passed to read.table.}
 }
 \value{
-Returns a data frame.
+Returns either a single data frame or a list of two data frames.
 }
 \description{
 Reads in a .txt file of raw data transactions with the option for specifying
