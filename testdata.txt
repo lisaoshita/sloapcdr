@@ -1,0 +1,16 @@
+# RD|Action Code|State Code|County Code|Site ID|Parameter|POC|Sample Duration|Unit|Method|Date|Start Time|Sample Value|Null Data Code|Sampling Frequency|Monitor Protocol (MP) ID|Qualifier - 1|Qualifier - 2|Qualifier - 3|Qualifier - 4|Qualifier - 5|Qualifier - 6|Qualifier - 7|Qualifier - 8|Qualifier - 9|Qualifier - 10|Alternate Method Detectable Limit|Uncertainty
+# RC|Action Code|State Code|County Code|Site ID|Parameter|POC|Unit|Method|Year|Period|Number of Samples|Composite Type|Sample Value|Monitor Protocol (MP) ID|Qualifier - 1|Qualifier - 2|Qualifier - 3|Qualifier - 4|Qualifier - 5|Qualifier - 6|Qualifier - 7|Qualifier - 8|Qualifier - 9|Qualifier - 10|Alternate Method Detectable Limit|Uncertainty
+RD|I|06|079|0005|81102|2|1|001|122|20130601|00:00|27.4||||||||||||||4|
+RD|I|06|079|0005|81102|2|1|001|122|20130601|01:00|29.8||||||||||||||4|
+RD|I|06|079|0005|81102|2|1|001|122|20130601|02:00|25.4||||||||||||||4|
+RD|I|06|079|0005|81102|2|1|001|122|20130601|03:00|29.4||||||||||||||4|
+RD|I|06|079|0005|81102|2|1|001|122|20130601|04:00|28.7||||||||||||||4|
+RD|I|06|079|0005|81102|2|1|001|122|20130601|05:00|34.7||||||||||||||4|
+RD|I|06|079|0005|81102|2|1|001|122|20130601|06:00|35.5||||||||||||||4|
+RD|I|06|079|0005|81102|2|1|001|122|20130601|07:00|36.5||||||||||||||4|
+RD|I|06|079|0005|81102|2|1|001|122|20130601|08:00|32.2||||||||||||||4|
+RD|I|06|079|0005|81102|2|1|001|122|20130601|09:00|29.1||||||||||||||4|
+RD|I|06|079|0005|81102|2|1|001|122|20130601|10:00|17.8||||||||||||||4|
+RD|I|06|079|0005|81102|2|1|001|122|20130601|11:00|22.6||||||||||||||4|
+RD|I|06|079|0005|81102|2|1|001|122|20130601|12:00|25.2||||||||||||||4|
+RC|I|06|079|0005|81102|2|1|001|122|20130601|13:00|25.4||||||||||||||
