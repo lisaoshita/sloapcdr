@@ -4,6 +4,22 @@
 
 # use: devtools::document() to update documentation
 
+# =======
+# TO DO:
+# =======
+# -- Description (package meta data)
+# -- Vignettes (long-form documentation)
+# -- Automated testing
+
+# -- setting level attributes is not working (setting a level attribute on the
+#    returned data frame may be helpful for the rename() function)
+# -- still need to apply each of the levels to the RC data
+
+
+
+
+
+
 #' Read in and format raw data transactions from Air Quality Systems
 #'
 #'
@@ -68,7 +84,6 @@
 #'
 #' @export
 
-
 read.aqs <- function(file, level = 2, time.zone = "UTC", remove = FALSE, RC = "ignore", ...) {
 
   names <- c("RD", "Action.Code", "State.Code", "County.Code", "Site.ID", # column names (for RD only)
@@ -96,7 +111,6 @@ read.aqs <- function(file, level = 2, time.zone = "UTC", remove = FALSE, RC = "i
   if (RC == "include") { # create separate data frame for RC data
 
     rc.data <- data[rc.rows, ]
-
     colnames(rc.data) <- c("RD", "Action.Code", "State.Code", "County.Code", "Site.ID", # apply RC column names
                            "Parameter", "POC", "Unit", "Method", "Year", "Period",
                            "Number.of.Samples", "Composite.Type", "Sample.Value",
@@ -107,11 +121,13 @@ read.aqs <- function(file, level = 2, time.zone = "UTC", remove = FALSE, RC = "i
 
     rc.data <- rc.data[ , -which(is.na(colnames(rc.data)))]
     rc.data$Sample.Value <- as.numeric(rc.data$Sample.Value)
+    attr(rc.data, "lvl") <- paste("level", as.character(level), sep = " ") # set level attribute for rc data
 
   }
 
   data <- data[-rc.rows, ]
   data$Sample.Value <- as.numeric(data$Sample.Value)
+  attr(data, "lvl") <- paste("level", as.character(level), sep = " ") # set level attribute - THIS ISN'T WORKING
   state.code <- data$State.Code # used in level 3
 
   if (remove == TRUE) { # if remove = TRUE, drop the columns that contain all the same value
@@ -122,21 +138,14 @@ read.aqs <- function(file, level = 2, time.zone = "UTC", remove = FALSE, RC = "i
         rcol[i] <- 1
       }
     }
-    data <- data[ , -which((rcol == 1))]
+    data <- data[ , -which((rcol == 1) & (colnames(data) != "Date"))]
 
   }
 
-  if (level == 0) {
+  if ((level == 0) & (RC == "ignore")) return(data)
+  if ((level == 0) & (RC == "include")) return(list(data, rc.data))
 
-    attr(data, "level") <- "level 0"
-    if (RC == "ignore") {
-      return(data)
-    } else if (RC == "include") {
-      attr(rc.data, "level") <- "level 0"
-      return(list(data, rc.data))
-    }
 
-  }
 
   # LEVEL 1 ----------------------------------------
 
@@ -159,20 +168,22 @@ read.aqs <- function(file, level = 2, time.zone = "UTC", remove = FALSE, RC = "i
                                                   "Uncertainty"))),
                      (which(startsWith(colnames(data), "Qualifier") == TRUE)))]
 
+  data <- data[c("Date.Time", colnames(data)[-which(colnames(data) == "Date.Time")])] # reorder the columns
 
-  if (level == 1) {
 
-    attr(data, "level") <- "level 1"
-    if (RC == "ignore") {
-      return(data)
-    } else if (RC == "include") {
-      attr(rc.data, "level") <- "level 1"
-      return(list(data, rc.data))
-    }
+  if ((level == 1) & (RC == "ignore")) return(data)
+  if ((level == 1) & (RC == "include")) return(list(data, rc.data))
 
-  }
+
 
   # LEVEL 2 ----------------------------------------
+
+  if (ncol(data) <= 2) { # if columns are removed and what's left is only Sample.Value & Date.Time, stop here (no use applying other levels)
+
+    warning("RD data frame is not of sufficient size after removing redundant columns. Levels 2-4 cannot be applied.")
+    return(data[c("Date.Time", "Sample.Value")])
+
+  }
 
   paste.args <- c(data[, -c(which(colnames(data) == "Sample.Value"), # concatenate labels
                             which(colnames(data) == "Date.Time"))],
@@ -180,18 +191,12 @@ read.aqs <- function(file, level = 2, time.zone = "UTC", remove = FALSE, RC = "i
 
   data$Monitor.ID <- do.call(paste, paste.args)
 
-  if (level == 2) {
 
-    data <- data[c("Date.Time", "Monitor.ID", "Sample.Value")]
-    attr(data, "level") <- "level 2"
-    if (RC == "ignore") {
-      return(data)
-    } else if (RC == "include") {
-      attr(rc.data, "level") <- "level 2"
-      return(list(data, rc.data))
-    }
+  if ((level == 2) & (RC == "ignore")) return(data[c("Date.Time", "Monitor.ID", "Sample.Value")])
+  if ((level == 2) & (RC == "include")) return(list(data[c("Date.Time", "Monitor.ID", "Sample.Value")],
+                                                   rc.data))
 
-  }
+
 
   # LEVEL 3 ----------------------------------------
 
@@ -226,20 +231,12 @@ read.aqs <- function(file, level = 2, time.zone = "UTC", remove = FALSE, RC = "i
   data$Monitor.ID <- do.call(paste, paste.args1) # concatenate labels
   data <- data[, c("Date.Time", "Monitor.ID", "Sample.Value")]
 
-  if (level == 3) {
+  if ((level == 3) & (RC == "ignore")) return(data)
+  if ((level == 3) & (RC == "include")) return(list(data, rc.data))
 
-    attr(data, "level") <- "level 3"
-    if (RC == "ignore") {
-      return(data)
-    } else if (RC == "include") {
-      attr(rc.data, "level") <- "level 3"
-      return(list(data, rc.data))
-    }
 
-  }
 
   # LEVEL 4 ----------------------------------------
-
 
   data <- reshape2::dcast(data, # wide -> long format
                           Date.Time ~ Monitor.ID,
@@ -247,25 +244,13 @@ read.aqs <- function(file, level = 2, time.zone = "UTC", remove = FALSE, RC = "i
                           na.rm = TRUE,
                           fill = 0)
 
-  if (level == 4) {
-
-    attr(data, "level") <- "level 4"
-    if (RC == "ignore") {
-      return(data)
-    } else if (RC == "include") {
-      attr(rc.data, "level") <- "level 4"
-      return(list(data, rc.data))
-    }
-
-  }
+  if ((level == 4) & (RC == "ignore")) return(data)
+  if ((level == 4) & (RC == "include")) return(list(data, rc.data))
 
 }
 
 
-# IN PROGRESS:
-# - DESCRIPTION (package meta data)
-# - Vignettes (long-form documentation)
-# - Automated testing
+
 
 
 
